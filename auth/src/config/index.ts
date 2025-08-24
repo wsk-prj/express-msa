@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const config = {
-  PORT: 4000,
+  PORT: 4001,
   ROUTER_PREFIX: "/api",
 
   // JWT Configuration
