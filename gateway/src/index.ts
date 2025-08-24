@@ -2,6 +2,7 @@ import cors from "cors";
 import express from "express";
 
 import { config } from "@/config";
+import { generalRateLimit, loginRateLimit, signupRateLimit } from "@/middlewares/rate-limit";
 import { authProxy } from "@/proxy/service-proxy";
 
 const app = express();
@@ -18,7 +19,10 @@ app.get("/health", (_req, res) => {
   });
 });
 
-// Service Routes
+// Service Routes with Rate Limiting
+app.use(generalRateLimit);
+app.use("/api/auth/login", loginRateLimit);
+app.use("/api/auth/signup", signupRateLimit);
 app.use("/api/auth", authProxy);
 
 // Startup
