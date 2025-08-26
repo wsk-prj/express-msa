@@ -24,3 +24,27 @@ export const authProxy = createProxyMiddleware({
     });
   },
 });
+
+/**
+ * User Service 프록시
+ */
+export const userProxy = createProxyMiddleware({
+  target: config.SERVICES.USER,
+  changeOrigin: true,
+  timeout: 5000,
+  logLevel: 'debug',
+  onProxyReq: (proxyReq, req) => {
+    console.log(`[PROXY] ${req.method} ${req.url} -> ${config.SERVICES.USER}${req.url}`);
+  },
+  onProxyRes: (proxyRes, req, res) => {
+    console.log(`[PROXY] Response: ${proxyRes.statusCode} for ${req.method} ${req.url}`);
+  },
+  onError: (err, req, res) => {
+    console.error("User Service Error:", err.message);
+    console.error("Target URL:", config.SERVICES.USER);
+    res.status(503).json({
+      success: false,
+      message: "User service unavailable",
+    });
+  },
+});

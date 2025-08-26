@@ -3,7 +3,7 @@ import express from "express";
 
 import { config } from "@/config";
 import { generalRateLimit, loginRateLimit, signupRateLimit } from "@/middlewares/rate-limit";
-import { authProxy } from "@/proxy/service-proxy";
+import { authProxy, userProxy } from "@/proxy/service-proxy";
 
 const app = express();
 
@@ -24,10 +24,12 @@ app.use(generalRateLimit);
 app.use("/api/auth/login", loginRateLimit);
 app.use("/api/auth/signup", signupRateLimit);
 app.use("/api/auth", authProxy);
+app.use("/api/user", userProxy);
 
 // Startup
 app.listen(config.PORT, () => {
   console.log(`🚀 API Gateway is running on port ${config.PORT}`);
   console.log(`📊 Health check: http://localhost:${config.PORT}/health`);
   console.log(`🔐 Auth Service: http://localhost:${config.PORT}/api/auth/*`);
+  console.log(`👤 User Service: http://localhost:${config.PORT}/api/user/*`);
 });
