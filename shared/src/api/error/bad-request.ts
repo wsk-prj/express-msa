@@ -1,4 +1,4 @@
-import { HttpError } from "@/api/error/http-error";
+import { HttpError } from "./http-error";
 
 export class BadRequestError extends HttpError {
   constructor(details?: any) {

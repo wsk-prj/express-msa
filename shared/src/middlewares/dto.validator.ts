@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ZodSchema, ZodError } from "zod";
 
-import { BadRequestError } from "@/api/error/bad-request";
+import { BadRequestError } from "../api/error/bad-request";
 
 /**
  * Zod 스키마를 사용한 요청 검증 미들웨어

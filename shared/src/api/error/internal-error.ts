@@ -1,4 +1,4 @@
-import { HttpError } from "@/api/error/http-error";
+import { HttpError } from "./http-error";
 
 export class InternalServerError extends HttpError {
   constructor(details?: any) {

@@ -1,5 +1,5 @@
-import { SignupDto } from "@/routes/auth/auth.schema";
 import { db } from "@/libs/db";
+import { SignupDto } from "@/routes/auth/auth.schema";
 
 export const tx = {
   /**

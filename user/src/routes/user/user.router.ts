@@ -1,8 +1,8 @@
 import { Router } from "express";
 import asyncHandler from "express-async-handler";
+
+import { NotFoundError, validateRequest } from "@msa/shared";
 import { db } from "@/libs/db";
-import { NotFoundError } from "@/api/error/bad-request";
-import { validateRequest } from "@/middlewares/dto.validator";
 import { CreateProfileSchema } from "@/routes/user/user.schema";
 import { ProfileResponse } from "@/routes/user/user.dto";
 

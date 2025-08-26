@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
-import { HttpError } from "@/api/error/http-error";
-import { ApiResult } from "@/api/api-result.type";
+import { HttpError } from "../api/error/http-error";
+import { ApiResult } from "../api/api-result";
 
 export const responseHandler = (_req: Request, res: Response, next: NextFunction) => {
   res.success = <T>(data?: any, status: number = 200, message: string = "Success", details?: any): Response<ApiResult<T>> => {

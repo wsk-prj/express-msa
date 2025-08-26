@@ -2,14 +2,13 @@ import bcrypt from "bcrypt";
 import { Router } from "express";
 import asyncHandler from "express-async-handler";
 
-import { ConflictError, UnauthorizedError } from "@/api/error/bad-request";
+import { ConflictError, UnauthorizedError, validateRequest } from "@msa/shared";
 import { config } from "@/config";
 import { db } from "@/libs/db";
 import { SignupResponse, TokenResponse } from "@/routes/auth/auth.dto";
 import { CheckEmailSchema, CheckNicknameSchema, LoginSchema, SignupSchema } from "@/routes/auth/auth.schema";
 import { generateAccessToken, generateRefreshToken, regenRefreshToken, verifyRefreshToken } from "@/libs/jwt";
 import { requiredAuth } from "@/middlewares/auth.middleware";
-import { validateRequest } from "@/middlewares/dto.validator";
 import { tx } from "@/persist/transactions";
 export const router = Router();
 
@@ -20,8 +19,14 @@ router.post(
   asyncHandler(async (req, res, _next) => {
     const { nickname, email, password } = req.body;
 
+    const existUser = await db.user.findUnique({ where: { nickname } });
+    if (existUser) throw new ConflictError();
+
+    const existAuth = await db.auth.findUnique({ where: { email } });
+    if (existAuth) throw new ConflictError();
+
     const hashedPassword = await bcrypt.hash(password, 12);
-    const { user: dbUser, auth: dbAuth } = await tx.signup({
+    const { user: newUser, auth: newAuth } = await tx.signup({
       nickname,
       email,
       password: hashedPassword,
@@ -29,9 +34,9 @@ router.post(
 
     res.created<SignupResponse>({
       user: {
-        id: dbUser.id,
-        nickname: dbUser.nickname,
-        email: dbAuth.email,
+        id: newUser.id,
+        nickname: newUser.nickname,
+        email: newAuth.email,
       },
     });
   })

@@ -3,8 +3,7 @@ import cors from "cors";
 import express from "express";
 
 import { config } from "@/config";
-import { responseHandler } from "@/middlewares/response.handler";
-import { errorHandler } from "@/middlewares/error.handler";
+import { responseHandler, errorHandler } from "@msa/shared";
 import { router } from "@/routes";
 
 const app = express();

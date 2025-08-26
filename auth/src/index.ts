@@ -6,8 +6,7 @@ import express from "express";
 import helmet from "helmet";
 
 import { config } from "@/config";
-import { errorHandler } from "@/middlewares/error.handler";
-import { responseHandler } from "@/middlewares/response.handler";
+import { errorHandler, responseHandler } from "@msa/shared";
 import { router } from "@/routes/index";
 
 const app = express();
