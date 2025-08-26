@@ -1,0 +1,40 @@
+import "reflect-metadata";
+import cors from "cors";
+import express from "express";
+
+import { config } from "@/config";
+import { responseHandler } from "@/middlewares/response.handler";
+import { errorHandler } from "@/middlewares/error.handler";
+import { router } from "@/routes";
+
+const app = express();
+
+// Express Configurations
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Response Handler
+app.use(responseHandler);
+
+// Health Check
+app.get("/health", (_req, res) => {
+  res.json({
+    success: true,
+    message: "User Service is running",
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// API Routes
+app.use("/api", router);
+
+// Error Handler
+app.use(errorHandler);
+
+// Startup
+app.listen(config.PORT, () => {
+  console.log(`🚀 User Service is running on port ${config.PORT}`);
+  console.log(`📊 Health check: http://localhost:${config.PORT}/health`);
+  console.log(`👤 User API: http://localhost:${config.PORT}/api/user/*`);
+});
