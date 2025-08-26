@@ -15,6 +15,7 @@
     "db:mig": "prisma migrate dev"
   },
   "dependencies": {
+    "@msa/shared": "file:../shared",
     "@prisma/client": "^6",
     "cors": "^2",
     "express": "^4",
