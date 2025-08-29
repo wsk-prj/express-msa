@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ZodSchema, ZodError } from "zod";
 
-import { BadRequestError } from "../api/error/bad-request";
+import { BadRequestError } from "@msa/http-error";
 
 /**
  * Zod 스키마를 사용한 요청 검증 미들웨어
@@ -19,10 +19,10 @@ export function validateRequest(schema: ZodSchema) {
         const firstError = error.errors[0];
         const errorMessage = firstError?.message || "Request validation failed";
 
-        return res.fail(new BadRequestError(errorMessage));
+        throw new BadRequestError(errorMessage);
       }
 
-      return res.fail(new BadRequestError("Invalid request data"));
+      throw new BadRequestError("Invalid request data");
     }
   };
 }

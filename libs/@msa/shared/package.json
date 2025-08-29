@@ -5,10 +5,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
     "dev": "tsc --watch"
   },
   "dependencies": {
+    "@msa/http-error": "file:../http-error",
     "express": "^4.18.0",
     "ioredis": "^5.7.0",
     "zod": "^3.22.0"
