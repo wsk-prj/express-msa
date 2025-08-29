@@ -2,15 +2,16 @@ import bcrypt from "bcrypt";
 import { Router } from "express";
 import asyncHandler from "express-async-handler";
 
-import { ConflictError, UnauthorizedError, validateRequest } from "@msa/shared";
-import { publishSignupEvent, publishLoginEvent, publishLogoutEvent } from "@/services/auth.event-pub";
+import { ConflictError, UnauthorizedError } from "@msa/http-error";
+import { validateRequest } from "@msa/shared";
+import { publishSignupEvent } from "@/services/auth.event-pub";
 import { config } from "@/config";
 import { db } from "@/libs/db";
 import { SignupResponse, TokenResponse } from "@/routes/auth/auth.dto";
 import { CheckEmailSchema, CheckNicknameSchema, LoginSchema, SignupSchema } from "@/routes/auth/auth.schema";
 import { generateAccessToken, generateRefreshToken, regenRefreshToken, verifyRefreshToken } from "@/libs/jwt";
 import { requiredAuth } from "@/middlewares/auth.middleware";
-import { tx } from "@/persist/transactions";
+import { tx } from "@/services/auth.transaction";
 export const router = Router();
 
 // 회원가입
