@@ -1,11 +1,10 @@
 import { Router } from "express";
 import asyncHandler from "express-async-handler";
 
-import { NotFoundError } from "@msa/http-error";
 import { validateRequest } from "@msa/shared";
-import { db } from "@/libs/db";
-import { CreateProfileSchema } from "@/routes/user/user.schema";
+import { CreateProfileSchema } from "@/routes/user/user.dto";
 import { ProfileResponse } from "@/routes/user/user.dto";
+import { userService } from "@/services/user.service";
 
 const router = Router();
 
@@ -14,11 +13,7 @@ router.post(
   "/profile",
   validateRequest(CreateProfileSchema),
   asyncHandler(async (req, res, _next) => {
-    const { phone, address, userId } = req.body;
-
-    const dbProfile = await db.profile.create({
-      data: { phone, address, userId: Number(userId) },
-    });
+    const dbProfile = await userService.createProfile(req.body);
 
     res.created<ProfileResponse>(dbProfile);
   })
@@ -28,12 +23,7 @@ router.post(
 router.get(
   "/profile/:userId",
   asyncHandler(async (req, res, _next) => {
-    const userId = req.params.userId;
-
-    const dbProfile = await db.profile.findUnique({
-      where: { userId: Number(userId) },
-    });
-    if (!dbProfile) throw new NotFoundError();
+    const dbProfile = await userService.getProfileById(Number(req.params.userId));
 
     res.success<ProfileResponse>(dbProfile);
   })

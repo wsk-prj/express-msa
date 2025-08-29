@@ -10,5 +10,5 @@ export const setupEventSubscriptions = async () => {
     console.log("✅ User profile created:", event.userId);
   });
 
-  console.log("✅ Event subscriptions setup complete");
+  console.log("      ✅ Event subscriptions setup complete");
 };

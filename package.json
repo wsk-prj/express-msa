@@ -2,7 +2,7 @@
   "workspaces": [
     "libs/*",
     "auth",
-    "user",
+    "users",
     "gateway"
   ],
   "scripts": {
