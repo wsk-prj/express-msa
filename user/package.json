@@ -1,5 +1,5 @@
 {
-  "name": "user-service",
+  "name": "msa-user-service",
   "private": true,
   "version": "0.1.0",
   "scripts": {
@@ -15,7 +15,9 @@
     "db:mig": "prisma migrate dev"
   },
   "dependencies": {
-    "@msa/shared": "file:../shared",
+    "@msa/http-error": "file:../libs/@msa/http-error",
+    "@msa/response-data": "file:../libs/@msa/response-data",
+    "@msa/shared": "file:../libs/@msa/shared",
     "@prisma/client": "^6",
     "cors": "^2",
     "express": "^4",

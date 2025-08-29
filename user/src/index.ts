@@ -3,7 +3,7 @@ import cors from "cors";
 import express from "express";
 
 import { config } from "@/config";
-import { responseHandler, errorHandler } from "@msa/shared";
+import { responseDataHandler, errorHandler } from "@msa/response-data";
 import { router } from "@/routes";
 import { setupEventSubscriptions } from "@/services/user.event-sub";
 
@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Response Handler
-app.use(responseHandler);
+app.use(responseDataHandler);
 
 // Health Check
 app.get("/health", (_req, res) => {
