@@ -1,3 +1,8 @@
-**/dist
+**/.cursor
+**/.DS_Store
+
 **/node_modules
 **/package-lock.json
+
+**/dist
+**/tsconfig.tsbuildinfo

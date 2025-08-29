@@ -1,7 +1,7 @@
 import "express";
 
 import { ApiResult } from "../api/api-result";
-import { HttpError } from "../api/error/http-error";
+import { HttpError } from "@msa/http-error";
 
 declare module "express-serve-static-core" {
   interface Response {

@@ -1,5 +1,5 @@
 {
-  "name": "api-gateway",
+  "name": "msa-gateway",
   "version": "1.0.0",
   "description": "API Gateway for MSA",
   "main": "dist/index.js",

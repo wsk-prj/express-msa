@@ -6,7 +6,7 @@ import express from "express";
 import helmet from "helmet";
 
 import { config } from "@/config";
-import { errorHandler, responseHandler } from "@msa/shared";
+import { errorHandler, responseDataHandler } from "@msa/response-data";
 import { router } from "@/routes/index";
 
 const app = express();
@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Middlewares
-app.use(responseHandler); // Response Handler
+app.use(responseDataHandler); // Response Handler
 app.use(config.ROUTER_PREFIX, router); // Routes
 app.use(errorHandler); // Error Handler
 

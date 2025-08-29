@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import { UnauthorizedError } from "@msa/shared";
+import { UnauthorizedError } from "@msa/http-error";
 import { db } from "@/libs/db";
 import { verifyAccessToken, extractTokenFromHeader } from "@/libs/jwt";
 
@@ -10,14 +10,14 @@ import { verifyAccessToken, extractTokenFromHeader } from "@/libs/jwt";
 export const requiredAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = extractTokenFromHeader(req.headers.authorization);
-    if (!token) return res.fail(new UnauthorizedError());
+    if (!token) throw new UnauthorizedError();
 
     const payload = verifyAccessToken(token);
     const user = await db.user.findUnique({
       where: { id: payload.userId },
       include: { auth: true },
     });
-    if (!user || !user.auth) return res.fail(new UnauthorizedError());
+    if (!user || !user.auth) throw new UnauthorizedError();
 
     req.user = {
       userId: user.id,
@@ -27,7 +27,7 @@ export const requiredAuth = async (req: Request, res: Response, next: NextFuncti
 
     next();
   } catch (error) {
-    return res.fail(new UnauthorizedError());
+    throw new UnauthorizedError();
   }
 };
 
