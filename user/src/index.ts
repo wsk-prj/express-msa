@@ -5,6 +5,7 @@ import express from "express";
 import { config } from "@/config";
 import { responseHandler, errorHandler } from "@msa/shared";
 import { router } from "@/routes";
+import { setupEventSubscriptions } from "@/services/user.event-sub";
 
 const app = express();
 
@@ -32,8 +33,10 @@ app.use("/api", router);
 app.use(errorHandler);
 
 // Startup
-app.listen(config.PORT, () => {
+app.listen(config.PORT, async () => {
   console.log(`🚀 User Service is running on port ${config.PORT}`);
   console.log(`📊 Health check: http://localhost:${config.PORT}/health`);
   console.log(`👤 User API: http://localhost:${config.PORT}/api/user/*`);
+
+  await setupEventSubscriptions();
 });

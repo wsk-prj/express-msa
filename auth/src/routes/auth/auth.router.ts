@@ -3,6 +3,7 @@ import { Router } from "express";
 import asyncHandler from "express-async-handler";
 
 import { ConflictError, UnauthorizedError, validateRequest } from "@msa/shared";
+import { publishSignupEvent, publishLoginEvent, publishLogoutEvent } from "@/services/auth.event-pub";
 import { config } from "@/config";
 import { db } from "@/libs/db";
 import { SignupResponse, TokenResponse } from "@/routes/auth/auth.dto";
@@ -31,6 +32,9 @@ router.post(
       email,
       password: hashedPassword,
     });
+
+    // 이벤트 발행
+    publishSignupEvent({ userId: newUser.id });
 
     res.created<SignupResponse>({
       user: {
