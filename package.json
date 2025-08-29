@@ -3,6 +3,7 @@
     "libs/*",
     "auth",
     "users",
+    "stores",
     "gateway"
   ],
   "scripts": {

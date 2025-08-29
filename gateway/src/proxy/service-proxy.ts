@@ -8,7 +8,7 @@ export const authProxy = createProxyMiddleware({
   target: config.SERVICES.AUTH,
   changeOrigin: true,
   timeout: 5000,
-  logLevel: 'debug',
+  logLevel: "debug",
   onProxyReq: (proxyReq, req) => {
     console.log(`[PROXY] ${req.method} ${req.url} -> ${config.SERVICES.AUTH}${req.url}`);
   },
@@ -32,7 +32,7 @@ export const userProxy = createProxyMiddleware({
   target: config.SERVICES.USER,
   changeOrigin: true,
   timeout: 5000,
-  logLevel: 'debug',
+  logLevel: "debug",
   onProxyReq: (proxyReq, req) => {
     console.log(`[PROXY] ${req.method} ${req.url} -> ${config.SERVICES.USER}${req.url}`);
   },
@@ -45,6 +45,30 @@ export const userProxy = createProxyMiddleware({
     res.status(503).json({
       success: false,
       message: "User service unavailable",
+    });
+  },
+});
+
+/**
+ * Store Service 프록시
+ */
+export const storeProxy = createProxyMiddleware({
+  target: config.SERVICES.STORE,
+  changeOrigin: true,
+  timeout: 5000,
+  logLevel: "debug",
+  onProxyReq: (proxyReq, req) => {
+    console.log(`[PROXY] ${req.method} ${req.url} -> ${config.SERVICES.STORE}${req.url}`);
+  },
+  onProxyRes: (proxyRes, req, res) => {
+    console.log(`[PROXY] Response: ${proxyRes.statusCode} for ${req.method} ${req.url}`);
+  },
+  onError: (err, req, res) => {
+    console.error("Store Service Error:", err.message);
+    console.error("Target URL:", config.SERVICES.STORE);
+    res.status(503).json({
+      success: false,
+      message: "Store service unavailable",
     });
   },
 });
