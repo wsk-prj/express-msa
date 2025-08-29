@@ -19,17 +19,23 @@ app.use(
     credentials: true,
   })
 );
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 
-// Middlewares
-app.use(responseDataHandler); // Response Handler
-app.use(config.ROUTER_PREFIX, router); // Routes
-app.use(errorHandler); // Error Handler
+// Service Routes
+app.use(responseDataHandler);
+app.use(config.ROUTER_PREFIX, router);
+app.use(errorHandler);
+app.get("/health", (_req, res) => {
+  res.success({
+    success: true,
+    message: "Auth Service is running",
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // Startup action
 app.listen(config.PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Server is running on port ${config.PORT}`);
+  console.log(`   Auth Service is running on port ${config.PORT}`);
 });
