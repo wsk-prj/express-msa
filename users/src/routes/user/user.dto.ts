@@ -1,10 +1,10 @@
-import { Profile } from "@prisma/client";
+import { Profile } from "@/generated/prisma";
 
 import { z } from "zod";
 
 export const CreateProfileSchema = z.object({
-  phone: z.string(),
-  address: z.string(),
+  phone: z.string().optional(),
+  address: z.string().optional(),
   userId: z.number(),
 });
 

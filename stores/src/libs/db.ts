@@ -1,4 +1,4 @@
-import { PrismaClient } from "@/generated";
+import { PrismaClient } from "@/generated/prisma";
 
 // Singleton instance - Hot Reload 대비
 declare global {

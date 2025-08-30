@@ -11,7 +11,10 @@
     "start": "lerna run start",
     "dev": "lerna run dev",
     "lint": "lerna run lint",
-    "lint:fix": "lerna run lint:fix"
+    "lint:fix": "lerna run lint:fix",
+    "db:gen": "lerna run db:gen",
+    "db:push": "lerna run db:push",
+    "db:run": "lerna run db:run"
   },
   "dependencies": {},
   "devDependencies": {
