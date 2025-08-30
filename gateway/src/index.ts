@@ -19,6 +19,7 @@ app.use("/api/auth/signup", signupRateLimit);
 app.use("/api/auth", authProxy);
 app.use("/api/users", userProxy);
 app.use("/api/stores", storeProxy);
+app.use("/api/menus", storeProxy);
 
 // Health Check
 app.get("/health", (_req, res) => {
