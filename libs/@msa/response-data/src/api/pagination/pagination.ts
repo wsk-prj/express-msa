@@ -10,3 +10,10 @@ export interface Page<T> {
   isFirst: boolean;
   isLast: boolean;
 }
+
+export interface PagedRequest {
+  pageSize?: number;
+  pageNumber?: number;
+  sortBy?: string;
+  direction?: "asc" | "desc";
+}
