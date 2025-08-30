@@ -1,4 +1,4 @@
-import { User, Auth } from "@prisma/client";
+import { User, Auth } from "@/generated/prisma";
 
 import { z } from "zod";
 

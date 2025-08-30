@@ -6,7 +6,7 @@ export const setupEventSubscriptions = async () => {
   await eventBus.subscribe("user.signup", async (event: UserSignupEvent) => {
     console.log("📧 User signup event received:", event);
 
-    await userService.createProfile(event.userId);
+    await userService.createProfile({ userId: event.userId });
     console.log("✅ User profile created:", event.userId);
   });
 
