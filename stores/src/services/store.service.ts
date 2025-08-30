@@ -3,20 +3,19 @@ import { CreateStoreDto, UpdateStoreDto } from "@/routes/store/store.dto";
 import { NotFoundError } from "@msa/http-error";
 
 export const storeService = {
-  // 가게 CRUD
-  async createStore(data: CreateStoreDto) {
+  createStore: async (data: CreateStoreDto) => {
     return db.store.create({
       data,
     });
   },
 
-  async getStores() {
+  getStores: async () => {
     return db.store.findMany({
       orderBy: { createdAt: "desc" },
     });
   },
 
-  async getStoreById(id: number) {
+  getStoreById: async (id: number) => {
     const store = await db.store.findUnique({
       where: { id },
     });
@@ -25,14 +24,14 @@ export const storeService = {
     return store;
   },
 
-  async updateStore(id: number, data: UpdateStoreDto) {
+  updateStore: async (id: number, data: UpdateStoreDto) => {
     return db.store.update({
       where: { id },
       data,
     });
   },
 
-  async deleteStore(id: number) {
+  deleteStore: async (id: number) => {
     return db.store.delete({
       where: { id },
     });

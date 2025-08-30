@@ -8,7 +8,7 @@ const router = Router();
 // 가게 CRUD
 router.post("/", validateRequest(createStoreSchema), async (req, res) => {
   const store = await storeService.createStore(req.body);
-  res.success(store, 201);
+  res.created(store);
 });
 
 router.get("/", async (req, res) => {
@@ -31,7 +31,7 @@ router.put("/:storeId", validateRequest(updateStoreSchema), async (req, res) => 
 router.delete("/:storeId", async (req, res) => {
   const storeId = Number(req.params.storeId);
   await storeService.deleteStore(storeId);
-  res.success(null, 204);
+  res.noContent();
 });
 
 export { router as storeRouter };
