@@ -1,8 +1,20 @@
 import { Page, PagedRequest } from "../api/pagination/page";
 
-export function createPage<T>(items: T[], { pageNumber = 0, pageSize = 10 }: PagedRequest): Page<T> {
+interface CreatePageParams<T> {
+  items: T[];
+  total?: number;
+  pageNumber?: number;
+  pageSize?: number;
+}
+
+export function createPage<T>({
+  items,
+  total = items.length,
+  pageNumber = 0,
+  pageSize = 10,
+}: CreatePageParams<T>): Page<T> {
   // Calculate pagination
-  const totalElements = items.length;
+  const totalElements = total;
   const totalPages = Math.ceil(totalElements / pageSize);
   const startIndex = pageNumber * pageSize;
   const endIndex = startIndex + pageSize;
