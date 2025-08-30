@@ -3,12 +3,23 @@ import express from "express";
 
 import { config } from "@/config";
 import { generalRateLimit, loginRateLimit, signupRateLimit } from "@/middlewares/rate-limit";
-import { authProxy, userProxy } from "@/proxy/service-proxy";
+import { authProxy, userProxy, storeProxy } from "@/proxy/service-proxy";
 
 const app = express();
 
 // Express Configurations
 app.use(cors());
+
+// Rate Limit
+app.use(generalRateLimit);
+app.use("/api/auth/login", loginRateLimit);
+app.use("/api/auth/signup", signupRateLimit);
+
+// Service Routes
+app.use("/api/auth", authProxy);
+app.use("/api/users", userProxy);
+app.use("/api/stores", storeProxy);
+app.use("/api/menus", storeProxy);
 
 // Health Check
 app.get("/health", (_req, res) => {
@@ -19,17 +30,7 @@ app.get("/health", (_req, res) => {
   });
 });
 
-// Service Routes with Rate Limiting
-app.use(generalRateLimit);
-app.use("/api/auth/login", loginRateLimit);
-app.use("/api/auth/signup", signupRateLimit);
-app.use("/api/auth", authProxy);
-app.use("/api/user", userProxy);
-
 // Startup
 app.listen(config.PORT, () => {
   console.log(`🚀 API Gateway is running on port ${config.PORT}`);
-  console.log(`📊 Health check: http://localhost:${config.PORT}/health`);
-  console.log(`🔐 Auth Service: http://localhost:${config.PORT}/api/auth/*`);
-  console.log(`👤 User Service: http://localhost:${config.PORT}/api/user/*`);
 });

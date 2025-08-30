@@ -1,4 +1,6 @@
 import "reflect-metadata";
+import "express-async-errors";
+
 import cors from "cors";
 import express from "express";
 
@@ -10,33 +12,30 @@ import { setupEventSubscriptions } from "@/services/user.event-sub";
 const app = express();
 
 // Express Configurations
-app.use(cors());
+app.use(cors(
+  {
+    origin: true,
+    credentials: true,
+  }
+));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Response Handler
+// Service Routes
 app.use(responseDataHandler);
-
-// Health Check
+app.use(config.ROUTER_PREFIX, router);
+app.use(errorHandler);
 app.get("/health", (_req, res) => {
-  res.json({
+  res.success({
     success: true,
     message: "User Service is running",
     timestamp: new Date().toISOString(),
   });
 });
 
-// API Routes
-app.use("/api", router);
-
-// Error Handler
-app.use(errorHandler);
-
 // Startup
 app.listen(config.PORT, async () => {
-  console.log(`🚀 User Service is running on port ${config.PORT}`);
-  console.log(`📊 Health check: http://localhost:${config.PORT}/health`);
-  console.log(`👤 User API: http://localhost:${config.PORT}/api/user/*`);
+  console.log(`   User Service is running on port ${config.PORT}`);
 
   await setupEventSubscriptions();
 });

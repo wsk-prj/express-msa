@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
+    "dev": "npm run db:run && ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
     "build": "tsc && tsc-alias",
     "start": "node -r tsconfig-paths/register dist/index.js",
     "lint": "eslint . --ext .ts",
@@ -21,7 +21,7 @@
     "@prisma/client": "^6",
     "cors": "^2",
     "express": "^4",
-    "express-async-handler": "^1",
+    "express-async-errors": "^3.1.1",
     "helmet": "^8",
     "jsonwebtoken": "^9.0.0",
     "reflect-metadata": "^0.2",
