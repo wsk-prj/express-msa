@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import "express-async-errors";
 
 import cookieParser from "cookie-parser";
 import cors from "cors";
