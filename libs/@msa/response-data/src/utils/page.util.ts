@@ -13,17 +13,12 @@ export function createPage<T>({
   pageNumber = 0,
   pageSize = 10,
 }: CreatePageParams<T>): Page<T> {
-  // Calculate pagination
   const totalElements = total;
   const totalPages = Math.ceil(totalElements / pageSize);
-  const startIndex = pageNumber * pageSize;
-  const endIndex = startIndex + pageSize;
 
-  // Get current page data
-  const content = items.slice(startIndex, endIndex);
+  const content = pageSize < items.length ? items.slice(pageNumber * pageSize, (pageNumber + 1) * pageSize) : items;
   const numberOfElements = content.length;
 
-  // Return Page<T> object
   return {
     content,
     size: pageSize,
