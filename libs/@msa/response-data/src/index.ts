@@ -1,6 +1,6 @@
 export * from "./types/express.type";
 
-export { Page, PagedRequest } from "./api/pagination/page";
+export { Page, PagedParams, SearchParams, QueryParams } from "./api/pagination/page";
 export { ApiData } from "./api/api-data";
 
 export { responseDataHandler } from "./middlewares/response-data.handler";

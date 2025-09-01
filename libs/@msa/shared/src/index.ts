@@ -8,4 +8,11 @@ export { EventBus, eventBus } from "./services/event-bus";
 export { validateRequest, validateQuery } from "./middlewares/dto.validator";
 
 // Schemas
-export { PagedRequestSchema, PagedRequest } from "./schema/request.schema";
+export {
+  PagedParamsSchema,
+  SearchParamsSchema,
+  QueryParamsSchema,
+  PagedParams,
+  SearchParams,
+  QueryParams,
+} from "./schema/request.schema";
