@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@msa/http-error": "file:../libs/@msa/http-error",
+    "@msa/request": "file:../libs/@msa/request",
     "@msa/response-data": "file:../libs/@msa/response-data",
     "@msa/shared": "file:../libs/@msa/shared",
     "@prisma/client": "^6",

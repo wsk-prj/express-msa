@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { validateRequest } from "@msa/shared";
+import { validateRequest, validateQuery } from "@msa/shared";
 import { createStoreSchema, updateStoreSchema } from "./store.dto";
+import { QueryParamsSchema } from "@msa/request";
 import { storeService } from "@/services/store.service";
 
 const router = Router();
@@ -11,9 +12,10 @@ router.post("/", validateRequest(createStoreSchema), async (req, res) => {
   res.created(store);
 });
 
-router.get("/", async (req, res) => {
-  const stores = await storeService.getStores();
-  res.success(stores);
+router.get("/", validateQuery(QueryParamsSchema), async (req, res) => {
+  const queryParams = req.query as any;
+  const page = await storeService.getStores(queryParams);
+  res.success(page);
 });
 
 router.get("/:storeId", async (req, res) => {

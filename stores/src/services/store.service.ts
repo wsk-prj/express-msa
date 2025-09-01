@@ -1,6 +1,11 @@
 import { db } from "@/libs/db";
-import { CreateStoreDto, UpdateStoreDto } from "@/routes/store/store.dto";
+
+import { createPage } from "@msa/response-data";
 import { NotFoundError } from "@msa/http-error";
+
+import { CreateStoreDto, UpdateStoreDto } from "@/routes/store/store.dto";
+import { QueryParams, createSearchCondition, createDateRangeCondition } from "@msa/request";
+import { Store } from "@/generated/prisma";
 
 export const storeService = {
   createStore: async (data: CreateStoreDto) => {
@@ -9,10 +14,26 @@ export const storeService = {
     });
   },
 
-  getStores: async () => {
-    return db.store.findMany({
-      orderBy: { createdAt: "desc" },
-    });
+  getStores: async (queryParams: QueryParams) => {
+    const { pageNumber = 0, pageSize = 10, sortBy = "createdAt", direction = "desc", q, dateFrom, dateTo } = queryParams;
+
+    // 검색 조건 구성
+    const whereConditions = {
+      ...createSearchCondition("name", q ?? ""),
+      ...createDateRangeCondition(dateFrom, dateTo),
+    };
+
+    const [stores, total] = await Promise.all([
+      db.store.findMany({
+        where: whereConditions,
+        skip: pageNumber * pageSize,
+        take: pageSize,
+        orderBy: { [sortBy]: direction },
+      }),
+      db.store.count({ where: whereConditions }),
+    ]);
+
+    return createPage<Store>({ items: stores, total, pageNumber, pageSize });
   },
 
   getStoreById: async (id: number) => {
