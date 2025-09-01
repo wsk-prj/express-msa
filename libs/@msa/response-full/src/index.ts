@@ -1,6 +1,4 @@
+export * from "./api/api-result";
+export * from "./middlewares/response.handler";
+export * from "./middlewares/error.handler";
 export * from "./types/express.type";
-
-export { ApiResult } from "./api/api-result";
-
-export { responseHandler } from "./middlewares/response.handler";
-export { errorHandler } from "./middlewares/error.handler";

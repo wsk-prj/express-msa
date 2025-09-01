@@ -1,4 +1,4 @@
-import { Page, PagedRequest } from "../api/pagination/page";
+import { Page } from "../api/pagination/page";
 
 interface CreatePageParams<T> {
   items: T[];
