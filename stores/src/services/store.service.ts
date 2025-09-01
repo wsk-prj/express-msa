@@ -4,7 +4,7 @@ import { createPage } from "@msa/response-data";
 import { NotFoundError } from "@msa/http-error";
 
 import { CreateStoreDto, UpdateStoreDto } from "@/routes/store/store.dto";
-import { QueryParams, createSearchCondition } from "@msa/request";
+import { QueryParams, createSearchCondition, createDateRangeCondition } from "@msa/request";
 import { Store } from "@/generated/prisma";
 
 export const storeService = {
@@ -15,11 +15,12 @@ export const storeService = {
   },
 
   getStores: async (queryParams: QueryParams) => {
-    const { pageNumber = 0, pageSize = 10, sortBy = "createdAt", direction = "desc", q } = queryParams;
+    const { pageNumber = 0, pageSize = 10, sortBy = "createdAt", direction = "desc", q, dateFrom, dateTo } = queryParams;
 
     // 검색 조건 구성
     const whereConditions = {
-      ...(q ? createSearchCondition("name", q) : {})
+      ...createSearchCondition("name", q ?? ""),
+      ...createDateRangeCondition(dateFrom, dateTo),
     };
 
     const [stores, total] = await Promise.all([
