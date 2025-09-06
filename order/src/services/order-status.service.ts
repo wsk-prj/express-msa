@@ -3,7 +3,7 @@ import { db } from "../libs/db";
 
 export const orderStatusService = {
   confirmOrder: async (orderId: number) => {
-    db.$transaction(async (tx) => {
+    const order = await db.$transaction(async (tx) => {
       await tx.order.update({
         where: { id: orderId },
         data: { status: OrderStatus.CONFIRMED },
@@ -16,9 +16,10 @@ export const orderStatusService = {
         },
       });
     });
+    return order;
   },
   deliveringOrder: async (orderId: number) => {
-    db.$transaction(async (tx) => {
+    const order = await db.$transaction(async (tx) => {
       await tx.order.update({
         where: { id: orderId },
         data: { status: OrderStatus.DELIVERING },
@@ -31,9 +32,10 @@ export const orderStatusService = {
         },
       });
     });
+    return order;
   },
   deliveredOrder: async (orderId: number) => {
-    db.$transaction(async (tx) => {
+    const order = await db.$transaction(async (tx) => {
       await tx.order.update({
         where: { id: orderId },
         data: { status: OrderStatus.DELIVERED },
@@ -46,9 +48,10 @@ export const orderStatusService = {
         },
       });
     });
+    return order;
   },
   completeOrder: async (orderId: number) => {
-    db.$transaction(async (tx) => {
+    const order = await db.$transaction(async (tx) => {
       await tx.order.update({
         where: { id: orderId },
         data: { status: OrderStatus.COMPLETED },
@@ -61,9 +64,10 @@ export const orderStatusService = {
         },
       });
     });
+    return order;
   },
   cancelOrder: async (orderId: number, reason: string) => {
-    db.$transaction(async (tx) => {
+    const order = await db.$transaction(async (tx) => {
       await tx.order.update({
         where: { id: orderId },
         data: { status: OrderStatus.CANCELLED },
@@ -77,9 +81,10 @@ export const orderStatusService = {
         },
       });
     });
+    return order;
   },
   rejectOrder: async (orderId: number, reason: string) => {
-    db.$transaction(async (tx) => {
+    const order = await db.$transaction(async (tx) => {
       await tx.order.update({
         where: { id: orderId },
         data: { status: OrderStatus.REJECTED },
@@ -93,5 +98,6 @@ export const orderStatusService = {
         },
       });
     });
+    return order;
   },
 };

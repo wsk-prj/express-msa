@@ -19,7 +19,7 @@ export const orderService = {
       },
     });
 
-    return { orderId: order.id };
+    return order;
   },
 
   getOrders: async (queryParams: QueryParams) => {
