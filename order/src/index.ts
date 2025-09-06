@@ -7,6 +7,7 @@ import { responseDataHandler, errorHandler } from "@msa/response-data";
 
 import { config } from "@/config";
 import { router } from "@/routes";
+import { setupOrderStatusListener } from "@/services/order-status.listener";
 
 const app = express();
 
@@ -35,4 +36,7 @@ app.get("/health", (_req, res) => {
 // Startup
 app.listen(config.PORT, async () => {
   console.log(`   Order Service is running on port ${config.PORT}`);
+  
+  // 이벤트 리스너 초기화
+  setupOrderStatusListener();
 });

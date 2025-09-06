@@ -1,109 +1,100 @@
 import { OrderStatus } from "@/generated/prisma";
 import { db } from "../libs/db";
+import { eventBus } from "@msa/shared";
 
 export const orderStatusService = {
   confirmOrder: async (orderId: number) => {
-    const order = await db.$transaction(async (tx) => {
-      const updatedOrder = await tx.order.update({
-        where: { id: orderId },
-        data: { status: OrderStatus.CONFIRMED },
-      });
-      await tx.orderStatusChange.create({
-        data: {
-          orderId,
-          status: OrderStatus.CONFIRMED,
-          previousStatus: OrderStatus.PENDING,
-        },
-      });
-      return updatedOrder;
+    const updatedOrder = await db.order.update({
+      where: { id: orderId },
+      data: { status: OrderStatus.CONFIRMED },
     });
-    return order;
+
+    await eventBus.publish("order.status.changed", {
+      orderId,
+      newStatus: OrderStatus.CONFIRMED,
+      previousStatus: OrderStatus.PENDING,
+      reason: "주문 수락 요청",
+    });
+
+    return updatedOrder;
   },
   deliveringOrder: async (orderId: number) => {
-    const order = await db.$transaction(async (tx) => {
-      const updatedOrder = await tx.order.update({
-        where: { id: orderId },
-        data: { status: OrderStatus.DELIVERING },
-      });
-      await tx.orderStatusChange.create({
-        data: {
-          orderId,
-          status: OrderStatus.DELIVERING,
-          previousStatus: OrderStatus.CONFIRMED,
-        },
-      });
-      return updatedOrder;
+    const updatedOrder = await db.order.update({
+      where: { id: orderId },
+      data: { status: OrderStatus.DELIVERING },
     });
-    return order;
+
+    await eventBus.publish("order.status.changed", {
+      orderId,
+      newStatus: OrderStatus.DELIVERING,
+      previousStatus: OrderStatus.CONFIRMED,
+      reason: "배송 시작 요청",
+    });
+
+    return updatedOrder;
   },
+
   deliveredOrder: async (orderId: number) => {
-    const order = await db.$transaction(async (tx) => {
-      const updatedOrder = await tx.order.update({
-        where: { id: orderId },
-        data: { status: OrderStatus.DELIVERED },
-      });
-      await tx.orderStatusChange.create({
-        data: {
-          orderId,
-          status: OrderStatus.DELIVERED,
-          previousStatus: OrderStatus.DELIVERING,
-        },
-      });
-      return updatedOrder;
+    const updatedOrder = await db.order.update({
+      where: { id: orderId },
+      data: { status: OrderStatus.DELIVERED },
     });
-    return order;
+
+    await eventBus.publish("order.status.changed", {
+      orderId,
+      newStatus: OrderStatus.DELIVERED,
+      previousStatus: OrderStatus.DELIVERING,
+      reason: "배송 완료 요청",
+    });
+
+    return updatedOrder;
   },
+
   completeOrder: async (orderId: number) => {
-    const order = await db.$transaction(async (tx) => {
-      const updatedOrder = await tx.order.update({
-        where: { id: orderId },
-        data: { status: OrderStatus.COMPLETED },
-      });
-      await tx.orderStatusChange.create({
-        data: {
-          orderId,
-          status: OrderStatus.COMPLETED,
-          previousStatus: OrderStatus.DELIVERED,
-        },
-      });
-      return updatedOrder;
+    const updatedOrder = await db.order.update({
+      where: { id: orderId },
+      data: { status: OrderStatus.COMPLETED },
     });
-    return order;
+
+    await eventBus.publish("order.status.changed", {
+      orderId,
+      newStatus: OrderStatus.COMPLETED,
+      previousStatus: OrderStatus.DELIVERED,
+      reason: "주문 완료 요청",
+    });
+
+    return updatedOrder;
   },
+
   cancelOrder: async (orderId: number, reason: string) => {
-    const order = await db.$transaction(async (tx) => {
-      const updatedOrder = await tx.order.update({
-        where: { id: orderId },
-        data: { status: OrderStatus.CANCELLED },
-      });
-      await tx.orderStatusChange.create({
-        data: {
-          orderId,
-          status: OrderStatus.CANCELLED,
-          previousStatus: OrderStatus.DELIVERED,
-          reason,
-        },
-      });
-      return updatedOrder;
+    const updatedOrder = await db.order.update({
+      where: { id: orderId },
+      data: { status: OrderStatus.CANCELLED },
     });
-    return order;
+
+    await eventBus.publish("order.status.changed", {
+      orderId,
+      newStatus: OrderStatus.CANCELLED,
+      previousStatus: OrderStatus.PENDING,
+      reason: `주문 취소 요청: ${reason}`,
+    });
+
+    return updatedOrder;
   },
+
   rejectOrder: async (orderId: number, reason: string) => {
-    const order = await db.$transaction(async (tx) => {
-      const updatedOrder = await tx.order.update({
-        where: { id: orderId },
-        data: { status: OrderStatus.REJECTED },
-      });
-      await tx.orderStatusChange.create({
-        data: {
-          orderId,
-          status: OrderStatus.REJECTED,
-          previousStatus: OrderStatus.DELIVERED,
-          reason,
-        },
-      });
-      return updatedOrder;
+    const updatedOrder = await db.order.update({
+      where: { id: orderId },
+      data: { status: OrderStatus.REJECTED },
     });
-    return order;
+
+    await eventBus.publish("order.status.changed", {
+      orderId,
+      newStatus: OrderStatus.REJECTED,
+      previousStatus: OrderStatus.PENDING,
+      reason: `주문 거부 요청: ${reason}`,
+    });
+
+    return updatedOrder;
   },
 };
