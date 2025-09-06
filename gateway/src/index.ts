@@ -3,7 +3,7 @@ import express from "express";
 
 import { config } from "@/config";
 import { generalRateLimit, loginRateLimit, signupRateLimit } from "@/middlewares/rate-limit";
-import { authProxy, userProxy, storeProxy } from "@/proxy/service-proxy";
+import { authProxy, userProxy, storeProxy, orderProxy } from "@/proxy/service-proxy";
 
 const app = express();
 
@@ -20,6 +20,8 @@ app.use("/api/auth", authProxy);
 app.use("/api/users", userProxy);
 app.use("/api/stores", storeProxy);
 app.use("/api/menus", storeProxy);
+app.use("/api/orders", orderProxy);
+app.use("/api/order-groups", orderProxy);
 
 // Health Check
 app.get("/health", (_req, res) => {

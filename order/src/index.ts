@@ -1,26 +1,23 @@
 import "reflect-metadata";
 import "express-async-errors";
 
-import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
-import helmet from "helmet";
-import { errorHandler, responseDataHandler } from "@msa/response-data";
+import { responseDataHandler, errorHandler } from "@msa/response-data";
 
 import { config } from "@/config";
-import { router } from "@/routes/index";
+import { router } from "@/routes";
+import { setupOrderStatusListener } from "@/services/order-status.listener";
 
 const app = express();
 
 // Express Configurations
-app.use(helmet());
 app.use(
   cors({
     origin: true,
     credentials: true,
   })
 );
-app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -31,12 +28,15 @@ app.use(errorHandler);
 app.get("/health", (_req, res) => {
   res.success({
     success: true,
-    message: "Auth Service is running",
+    message: "Order Service is running",
     timestamp: new Date().toISOString(),
   });
 });
 
-// Startup action
-app.listen(config.PORT, () => {
-  console.log(`   Auth Service is running on port ${config.PORT}`);
+// Startup
+app.listen(config.PORT, async () => {
+  console.log(`   Order Service is running on port ${config.PORT}`);
+  
+  // 이벤트 리스너 초기화
+  setupOrderStatusListener();
 });

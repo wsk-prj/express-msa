@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  DELIVERING
+  DELIVERED
+  COMPLETED
+  CANCELLED
+  REJECTED
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  status     OrderStatus @default(PENDING)
+  totalPrice Int
+  userId     Int
+  createdAt  DateTime    @default(now())
+
+  statusChanges OrderStatusChange[]
+  items         OrderItem[]
+}
+
+model OrderStatusChange {
+  id             Int          @id @default(autoincrement())
+  status         OrderStatus  @default(PENDING)
+  previousStatus OrderStatus?
+  reason         String?
+  orderId   Int
+  createdAt DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  menuId    Int
+  menuName  String
+  price     Int
+  quantity  Int
+  orderId   Int
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}

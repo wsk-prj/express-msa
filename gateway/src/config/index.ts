@@ -8,5 +8,6 @@ export const config = {
     AUTH: "http://127.0.0.1:4001",
     USER: "http://127.0.0.1:4002",
     STORE: "http://127.0.0.1:4003",
+    ORDER: "http://127.0.0.1:4004",
   },
 };

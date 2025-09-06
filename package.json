@@ -2,9 +2,10 @@
   "workspaces": [
     "libs/*",
     "auth",
-    "users",
-    "stores",
-    "gateway"
+    "user",
+    "store",
+    "gateway",
+    "order"
   ],
   "scripts": {
     "build": "lerna run build",
@@ -16,8 +17,40 @@
     "db:push": "lerna run db:push",
     "db:run": "lerna run db:run"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@prisma/client": "^6",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2",
+    "dotenv": "^16.3.1",
+    "express": "^4",
+    "express-async-errors": "^3.1.1",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^8",
+    "http-proxy-middleware": "^2.0.6",
+    "reflect-metadata": "^0.2",
+    "zod": "^3.22.0"
+  },
   "devDependencies": {
-    "lerna": "^8.2.4"
+    "@types/cookie-parser": "^1.4.6",
+    "@types/cors": "^2",
+    "@types/express": "^4",
+    "@types/node": "^20",
+    "@typescript-eslint/eslint-plugin": "^8",
+    "@typescript-eslint/parser": "^8",
+    "@typescript-eslint/utils": "^8",
+    "eslint": "^8",
+    "eslint-config-prettier": "^10",
+    "eslint-import-resolver-typescript": "^4",
+    "eslint-plugin-import": "^2",
+    "eslint-plugin-prettier": "^5",
+    "lerna": "^8.2.4",
+    "prettier": "^3",
+    "prisma": "^6",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "tsc-alias": "^1",
+    "tsconfig-paths": "^4",
+    "tsx": "^4.6.2",
+    "typescript": "~5.8"
   }
 }

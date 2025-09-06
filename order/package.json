@@ -1,6 +1,7 @@
 {
-  "name": "msa-auth-service",
+  "name": "msa-order-service",
   "version": "0.1.0",
+  "description": "",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,13 +17,8 @@
   },
   "dependencies": {
     "@msa/http-error": "file:../libs/@msa/http-error",
+    "@msa/request": "file:../libs/@msa/request",
     "@msa/response-data": "file:../libs/@msa/response-data",
-    "@msa/shared": "file:../libs/@msa/shared",
-    "bcrypt": "^6",
-    "jsonwebtoken": "^9.0.0"
-  },
-  "devDependencies": {
-    "@types/bcrypt": "^5",
-    "@types/jsonwebtoken": "^9.0.0"
+    "@msa/shared": "file:../libs/@msa/shared"
   }
 }

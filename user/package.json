@@ -1,5 +1,5 @@
 {
-  "name": "msa-auth-service",
+  "name": "msa-user-service",
   "version": "0.1.0",
   "main": "dist/index.js",
   "scripts": {
@@ -17,12 +17,6 @@
   "dependencies": {
     "@msa/http-error": "file:../libs/@msa/http-error",
     "@msa/response-data": "file:../libs/@msa/response-data",
-    "@msa/shared": "file:../libs/@msa/shared",
-    "bcrypt": "^6",
-    "jsonwebtoken": "^9.0.0"
-  },
-  "devDependencies": {
-    "@types/bcrypt": "^5",
-    "@types/jsonwebtoken": "^9.0.0"
+    "@msa/shared": "file:../libs/@msa/shared"
   }
 }
