@@ -6,7 +6,7 @@
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
-  "ignorePatterns": ["dist", "public", "node_modules"],
+  "ignorePatterns": ["dist", "public", "node_modules", "**/generated/**"],
   "plugins": [
     "@typescript-eslint",
     "prettier",

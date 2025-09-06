@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-
 import { UnauthorizedError } from "@msa/http-error";
+
 import { db } from "@/libs/db";
 import { verifyAccessToken, extractTokenFromHeader } from "@/libs/jwt";
 

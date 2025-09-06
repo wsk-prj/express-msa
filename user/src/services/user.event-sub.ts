@@ -1,4 +1,5 @@
 import { eventBus, UserSignupEvent } from "@msa/shared";
+
 import { userService } from "@/services/user.service";
 
 // 이벤트 구독 설정

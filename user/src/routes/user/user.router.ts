@@ -1,8 +1,7 @@
 import { Router } from "express";
-
 import { validateRequest } from "@msa/shared";
-import { CreateProfileSchema } from "@/routes/user/user.dto";
-import { ProfileResponse } from "@/routes/user/user.dto";
+
+import { CreateProfileSchema, ProfileResponse } from "@/routes/user/user.dto";
 import { userService } from "@/services/user.service";
 
 const router = Router();

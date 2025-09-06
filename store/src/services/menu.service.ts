@@ -1,6 +1,7 @@
+import { NotFoundError } from "@msa/http-error";
+
 import { db } from "@/libs/db";
 import { CreateMenuDto, UpdateMenuDto } from "@/routes/store/menu.dto";
-import { NotFoundError } from "@msa/http-error";
 
 export const menuService = {
   createMenu: async (data: CreateMenuDto) => {

@@ -1,6 +1,7 @@
+import { NotFoundError } from "@msa/http-error";
+
 import { db } from "@/libs/db";
 import { CreateProfileDto } from "@/routes/user/user.dto";
-import { NotFoundError } from "@msa/http-error";
 
 export const userService = {
   createProfile: async (data: CreateProfileDto) => {

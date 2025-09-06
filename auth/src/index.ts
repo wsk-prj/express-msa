@@ -5,9 +5,9 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
+import { errorHandler, responseDataHandler } from "@msa/response-data";
 
 import { config } from "@/config";
-import { errorHandler, responseDataHandler } from "@msa/response-data";
 import { router } from "@/routes/index";
 
 const app = express();

@@ -1,11 +1,13 @@
 import "reflect-metadata";
 import "express-async-errors";
 
-import express from "express";
 import cors from "cors";
+import express from "express";
+import { responseDataHandler, errorHandler } from "@msa/response-data";
+
 import { config } from "@/config";
 import { router } from "@/routes";
-import { responseDataHandler, errorHandler } from "@msa/response-data";
+import { setupEventSubscriptions } from "@/services/user.event-sub";
 
 const app = express();
 
@@ -26,12 +28,14 @@ app.use(errorHandler);
 app.get("/health", (_req, res) => {
   res.success({
     success: true,
-    message: "Store Service is running",
+    message: "User Service is running",
     timestamp: new Date().toISOString(),
   });
 });
 
 // Startup
 app.listen(config.PORT, async () => {
-  console.log(`   Store Service is running on port ${config.PORT}`);
+  console.log(`   User Service is running on port ${config.PORT}`);
+
+  await setupEventSubscriptions();
 });

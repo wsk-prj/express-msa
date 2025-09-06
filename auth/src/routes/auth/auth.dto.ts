@@ -1,6 +1,6 @@
-import { User, Auth } from "@/generated/prisma";
-
 import { z } from "zod";
+
+import { User, Auth } from "@/generated/prisma";
 
 // 회원가입 DTO
 export const SignupSchema = z.object({

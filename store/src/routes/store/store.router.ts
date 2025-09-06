@@ -1,8 +1,10 @@
 import { Router } from "express";
 import { validateRequest, validateQuery } from "@msa/shared";
-import { createStoreSchema, updateStoreSchema } from "./store.dto";
 import { QueryParamsSchema } from "@msa/request";
+
 import { storeService } from "@/services/store.service";
+
+import { createStoreSchema, updateStoreSchema } from "./store.dto";
 
 const router = Router();
 

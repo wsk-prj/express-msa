@@ -1,7 +1,9 @@
 import { Router } from "express";
 import { validateRequest } from "@msa/shared";
-import { createMenuSchema, updateMenuSchema } from "./menu.dto";
+
 import { menuService } from "@/services/menu.service";
+
+import { createMenuSchema, updateMenuSchema } from "./menu.dto";
 
 const router = Router();
 

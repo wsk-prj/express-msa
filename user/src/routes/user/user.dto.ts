@@ -1,6 +1,6 @@
-import { Profile } from "@/generated/prisma";
-
 import { z } from "zod";
+
+import { Profile } from "@/generated/prisma";
 
 export const CreateProfileSchema = z.object({
   phone: z.string().optional(),

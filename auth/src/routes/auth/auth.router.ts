@@ -1,10 +1,9 @@
 import { Router } from "express";
-
 import { validateRequest } from "@msa/shared";
+
 import { publishSignupEvent } from "@/services/auth.event-pub";
 import { config } from "@/config";
-import { SignupResponse, TokenResponse } from "@/routes/auth/auth.dto";
-import { CheckEmailSchema, CheckNicknameSchema, LoginSchema, SignupSchema } from "@/routes/auth/auth.dto";
+import { SignupResponse, TokenResponse, CheckEmailSchema, CheckNicknameSchema, LoginSchema, SignupSchema } from "@/routes/auth/auth.dto";
 import { requiredAuth } from "@/middlewares/auth.middleware";
 import { authService } from "@/services/auth.service";
 
