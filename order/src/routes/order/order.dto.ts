@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Order } from "@/generated/prisma";
 
 export const createOrderItemSchema = z.object({
   menuId: z.number().int().positive(),
@@ -23,3 +24,5 @@ export const orderRejectSchema = z.object({
 export type CreateOrderDto = z.infer<typeof createOrderSchema>;
 export type OrderCancelDto = z.infer<typeof orderCancelSchema>;
 export type OrderRejectDto = z.infer<typeof orderRejectSchema>;
+
+export type OrderResponse = Pick<Order, "id" | "status" | "totalPrice" | "createdAt">;
