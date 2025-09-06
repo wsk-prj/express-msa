@@ -15,26 +15,6 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-enum OrderGroupStatus {
-  OPEN
-  CLOSED
-  DELIVERING
-  COMPLETED
-}
-
-model OrderGroup {
-  id             Int              @id @default(autoincrement())
-  status         OrderGroupStatus @default(OPEN)
-  minMembers     Int              @default(1)
-  maxMembers     Int              @default(5)
-  currentMembers Int              @default(0)
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  storeId        Int
-
-  orders Order[]
-}
-
 enum OrderStatus {
   PENDING
   CONFIRMED
@@ -44,25 +24,33 @@ enum OrderStatus {
 }
 
 model Order {
-  id           Int         @id @default(autoincrement())
-  status       OrderStatus @default(PENDING)
-  totalPrice   Int
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  orderGroupId Int
-  userId       Int
+  id         Int         @id @default(autoincrement())
+  status     OrderStatus @default(PENDING)
+  totalPrice Int
+  userId     Int
+  createdAt  DateTime    @default(now())
 
-  orderGroup OrderGroup  @relation(fields: [orderGroupId], references: [id], onDelete: Cascade)
-  items      OrderItem[]
+  statusChanges OrderStatusChange[]
+  items         OrderItem[]
+}
+
+model OrderStatusChange {
+  id             Int          @id @default(autoincrement())
+  status         OrderStatus  @default(PENDING)
+  previousStatus OrderStatus?
+  reason         String?
+  orderId   Int
+  createdAt DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
 model OrderItem {
   id        Int      @id @default(autoincrement())
+  menuId    Int
   menuName  String
   price     Int
   quantity  Int
-  createdAt DateTime @default(now())
-  menuId    Int
   orderId   Int
 
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
