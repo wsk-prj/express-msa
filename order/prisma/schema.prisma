@@ -19,8 +19,10 @@ enum OrderStatus {
   PENDING
   CONFIRMED
   DELIVERING
+  DELIVERED
   COMPLETED
   CANCELLED
+  REJECTED
 }
 
 model Order {

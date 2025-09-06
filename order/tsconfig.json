@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    // type-safety
+    "strict": true,
+
+    // ECMAScript setting
+    "target": "ES2020",
+    "module": "commonJS",
+
+    // build
+    "outDir": "./dist",
+    "rootDir": "./src",
+
+    // type check
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // module
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    // debug
+    "sourceMap": true,
+    "incremental": true,
+
+    // decorator
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    // path alias
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+
+  // compile option
+  "include": ["./src"],
+  "exclude": ["./node_modules", "./dist"]
+}
