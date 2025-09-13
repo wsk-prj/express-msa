@@ -4,8 +4,8 @@ import { db } from "@/libs/db";
 import { CreateProfileDto } from "@/routes/user/user.dto";
 
 export const userService = {
-  createProfile: async (data: CreateProfileDto) => {
-    const { phone, address, userId } = data;
+  createProfile: async (data: CreateProfileDto, userId: number) => {
+    const { phone, address } = data;
 
     const dbProfile = await db.profile.create({
       data: { phone, address, userId },

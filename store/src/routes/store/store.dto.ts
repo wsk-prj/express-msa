@@ -6,7 +6,6 @@ export const createStoreSchema = z.object({
   description: z.string().optional(),
   address: z.string().min(1, "주소는 필수입니다"),
   phone: z.string().optional(),
-  userId: z.number().int().positive("올바른 사용자 ID를 입력해주세요"),
 });
 
 // 가게 수정 DTO

@@ -5,7 +5,6 @@ import { Profile } from "@/generated/prisma";
 export const CreateProfileSchema = z.object({
   phone: z.string().optional(),
   address: z.string().optional(),
-  userId: z.number(),
 });
 
 export type CreateProfileDto = z.infer<typeof CreateProfileSchema>;

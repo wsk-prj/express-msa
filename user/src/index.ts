@@ -3,11 +3,13 @@ import "express-async-errors";
 
 import cors from "cors";
 import express from "express";
+import { setup as setupJwtUtil } from "@msa/authentication";
 import { responseDataHandler, errorHandler } from "@msa/response-data";
 
 import { config } from "@/config";
 import { router } from "@/routes";
 import { setupEventSubscriptions } from "@/services/user.event-sub";
+
 
 const app = express();
 
@@ -20,6 +22,8 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Authentication Middleware는 개별 라우터에서 적용
 
 // Service Routes
 app.use(responseDataHandler);
@@ -36,6 +40,15 @@ app.get("/health", (_req, res) => {
 // Startup
 app.listen(config.PORT, async () => {
   console.log(`   User Service is running on port ${config.PORT}`);
+
+  // TODO: produer/consumer 설정 분리
+  setupJwtUtil({
+    JWT_SECRET: config.JWT_SECRET,
+    JWT_EXPIRES_IN: config.JWT_EXPIRES_IN,
+    JWT_REFRESH_SECRET: config.JWT_REFRESH_SECRET,
+    JWT_REFRESH_EXPIRES_IN: config.JWT_REFRESH_EXPIRES_IN,
+    JWT_REFRESH_REGENERATE_THRESHOLD: config.JWT_REFRESH_REGENERATE_THRESHOLD,
+  });  
 
   await setupEventSubscriptions();
 });
