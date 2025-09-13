@@ -1,4 +1,5 @@
 import { OrderStatus } from "@/generated/prisma";
+import { NotFoundError, ForbiddenError } from "@msa/http-error";
 import { db } from "../libs/db";
 import { eventBus } from "@msa/shared";
 
@@ -66,7 +67,14 @@ export const orderStatusService = {
     return updatedOrder;
   },
 
-  cancelOrder: async (orderId: number, reason: string) => {
+  cancelOrder: async (orderId: number, reason: string, userId: number) => {
+    const order = await db.order.findUnique({
+      where: { id: orderId },
+    });
+    
+    if (!order) throw new NotFoundError();
+    if (order.userId !== userId) throw new ForbiddenError();
+
     const updatedOrder = await db.order.update({
       where: { id: orderId },
       data: { status: OrderStatus.CANCELLED },

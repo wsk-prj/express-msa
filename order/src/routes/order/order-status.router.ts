@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { validateRequest } from "@msa/shared";
+import { authMiddleware } from "@msa/authentication";
 
 import { orderStatusService } from "../../services/order-status.service";
 import { orderCancelSchema, orderRejectSchema, OrderResponse } from "./order.dto";
@@ -30,10 +31,11 @@ router.post("/:orderId/complete", async (req, res) => {
   res.success<OrderResponse>(order);
 });
 
-router.post("/:orderId/cancel", validateRequest(orderCancelSchema), async (req, res) => {
+router.post("/:orderId/cancel", authMiddleware(), validateRequest(orderCancelSchema), async (req, res) => {
   const orderId = Number(req.params.orderId);
+  const userId = req.user!.id;
   const { reason } = req.body;
-  const order = await orderStatusService.cancelOrder(orderId, reason);
+  const order = await orderStatusService.cancelOrder(orderId, reason, userId);
   res.success<OrderResponse>(order);
 });
 

@@ -15,6 +15,7 @@
     "db:mig": "prisma migrate dev"
   },
   "dependencies": {
+    "@msa/authentication": "file:../libs/@msa/authentication",
     "@msa/http-error": "file:../libs/@msa/http-error",
     "@msa/response-data": "file:../libs/@msa/response-data",
     "@msa/shared": "file:../libs/@msa/shared"

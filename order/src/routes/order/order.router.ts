@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { validateRequest, validateQuery } from "@msa/shared";
 import { QueryParamsSchema } from "@msa/request";
+import { authMiddleware } from "@msa/authentication";
 
 import { orderService } from "../../services/order.service";
 
@@ -9,20 +10,23 @@ import { Page } from "@msa/response-data";
 
 const router = Router();
 
-router.post("/", validateRequest(createOrderSchema), async (req, res) => {
-  const order = await orderService.createOrder(req.body);
+router.post("/", authMiddleware(), validateRequest(createOrderSchema), async (req, res) => {
+  const userId = req.user!.id;
+  const order = await orderService.createOrder(req.body, userId);
   res.created<OrderResponse>(order);
 });
 
-router.get("/", validateQuery(QueryParamsSchema), async (req, res) => {
+router.get("/", authMiddleware(), validateQuery(QueryParamsSchema), async (req, res) => {
+  const userId = req.user!.id;
   const queryParams = req.query as any;
-  const page = await orderService.getOrders(queryParams);
+  const page = await orderService.getOrders(queryParams, userId);
   res.success<Page<OrderResponse>>(page);
 });
 
-router.get("/:orderId", async (req, res) => {
+router.get("/:orderId", authMiddleware(), async (req, res) => {
+  const userId = req.user!.id;
   const orderId = Number(req.params.orderId);
-  const order = await orderService.getOrderById(orderId);
+  const order = await orderService.getOrderById(orderId, userId);
   res.success<OrderResponse>(order);
 });
 

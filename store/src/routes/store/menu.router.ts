@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { validateRequest } from "@msa/shared";
+import { authMiddleware } from "@msa/authentication";
 
 import { menuService } from "@/services/menu.service";
 
@@ -8,8 +9,9 @@ import { createMenuSchema, updateMenuSchema } from "./menu.dto";
 const router = Router();
 
 // 메뉴 CRUD
-router.post("/", validateRequest(createMenuSchema), async (req, res) => {
-  const menu = await menuService.createMenu(req.body);
+router.post("/", authMiddleware(), validateRequest(createMenuSchema), async (req, res) => {
+  const userId = req.user!.id;
+  const menu = await menuService.createMenu(req.body, userId);
   res.created(menu);
 });
 
@@ -25,15 +27,17 @@ router.get("/:menuId", async (req, res) => {
   res.success(menu);
 });
 
-router.put("/:menuId", validateRequest(updateMenuSchema), async (req, res) => {
+router.put("/:menuId", authMiddleware(), validateRequest(updateMenuSchema), async (req, res) => {
+  const userId = req.user!.id;
   const menuId = Number(req.params.menuId);
-  const menu = await menuService.updateMenu(menuId, req.body);
+  const menu = await menuService.updateMenu(menuId, req.body, userId);
   res.success(menu);
 });
 
-router.delete("/:menuId", async (req, res) => {
+router.delete("/:menuId", authMiddleware(), async (req, res) => {
+  const userId = req.user!.id;
   const menuId = Number(req.params.menuId);
-  await menuService.deleteMenu(menuId);
+  await menuService.deleteMenu(menuId, userId);
   res.noContent();
 });
 

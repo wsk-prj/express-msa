@@ -1,5 +1,5 @@
 import { createPage } from "@msa/response-data";
-import { NotFoundError } from "@msa/http-error";
+import { NotFoundError, ForbiddenError } from "@msa/http-error";
 import { QueryParams, createSearchCondition, createDateRangeCondition } from "@msa/request";
 
 import { CreateStoreDto, UpdateStoreDto } from "@/routes/store/store.dto";
@@ -7,9 +7,12 @@ import { db } from "@/libs/db";
 import { Store } from "@/generated/prisma";
 
 export const storeService = {
-  createStore: async (data: CreateStoreDto) => {
+  createStore: async (data: CreateStoreDto, userId: number) => {
     return db.store.create({
-      data,
+      data: {
+        ...data,
+        userId,
+      },
     });
   },
 
@@ -44,14 +47,33 @@ export const storeService = {
     return store;
   },
 
-  updateStore: async (id: number, data: UpdateStoreDto) => {
+  updateStore: async (id: number, data: UpdateStoreDto, userId: number) => {
+    const store = await db.store.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!store) throw new NotFoundError();
+    if (store.userId !== userId) throw new ForbiddenError();
+
     return db.store.update({
       where: { id },
       data,
     });
   },
 
-  deleteStore: async (id: number) => {
+  deleteStore: async (id: number, userId: number) => {
+    // 먼저 가게가 존재하고 해당 사용자가 소유자인지 확인
+    const store = await db.store.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!store) throw new NotFoundError();
+    if (store.userId !== userId) throw new ForbiddenError();
+
     return db.store.delete({
       where: { id },
     });

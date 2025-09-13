@@ -3,6 +3,7 @@ import "express-async-errors";
 
 import express from "express";
 import cors from "cors";
+import { setup as setupJwtUtil } from "@msa/authentication";
 import { responseDataHandler, errorHandler } from "@msa/response-data";
 
 import { config } from "@/config";
@@ -35,4 +36,12 @@ app.get("/health", (_req, res) => {
 // Startup
 app.listen(config.PORT, async () => {
   console.log(`   Store Service is running on port ${config.PORT}`);
+
+  setupJwtUtil({
+    JWT_SECRET: config.JWT_SECRET,
+    JWT_EXPIRES_IN: config.JWT_EXPIRES_IN,
+    JWT_REFRESH_SECRET: config.JWT_REFRESH_SECRET,
+    JWT_REFRESH_EXPIRES_IN: config.JWT_REFRESH_EXPIRES_IN,
+    JWT_REFRESH_REGENERATE_THRESHOLD: config.JWT_REFRESH_REGENERATE_THRESHOLD,
+  });
 });

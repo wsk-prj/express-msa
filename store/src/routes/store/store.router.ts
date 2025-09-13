@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { validateRequest, validateQuery } from "@msa/shared";
 import { QueryParamsSchema } from "@msa/request";
+import { authMiddleware } from "@msa/authentication";
 
 import { storeService } from "@/services/store.service";
 
@@ -9,8 +10,9 @@ import { createStoreSchema, updateStoreSchema } from "./store.dto";
 const router = Router();
 
 // 가게 CRUD
-router.post("/", validateRequest(createStoreSchema), async (req, res) => {
-  const store = await storeService.createStore(req.body);
+router.post("/", authMiddleware(), validateRequest(createStoreSchema), async (req, res) => {
+  const userId = req.user!.id;
+  const store = await storeService.createStore(req.body, userId);
   res.created(store);
 });
 
@@ -26,15 +28,17 @@ router.get("/:storeId", async (req, res) => {
   res.success(store);
 });
 
-router.put("/:storeId", validateRequest(updateStoreSchema), async (req, res) => {
+router.put("/:storeId", authMiddleware(), validateRequest(updateStoreSchema), async (req, res) => {
+  const userId = req.user!.id;
   const storeId = Number(req.params.storeId);
-  const store = await storeService.updateStore(storeId, req.body);
+  const store = await storeService.updateStore(storeId, req.body, userId);
   res.success(store);
 });
 
-router.delete("/:storeId", async (req, res) => {
+router.delete("/:storeId", authMiddleware(), async (req, res) => {
+  const userId = req.user!.id;
   const storeId = Number(req.params.storeId);
-  await storeService.deleteStore(storeId);
+  await storeService.deleteStore(storeId, userId);
   res.noContent();
 });
 

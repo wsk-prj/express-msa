@@ -1,13 +1,13 @@
 import { createPage } from "@msa/response-data";
-import { NotFoundError } from "@msa/http-error";
+import { NotFoundError, ForbiddenError } from "@msa/http-error";
 import { createSearchCondition, QueryParams } from "@msa/request";
 
 import { db } from "../libs/db";
 import { CreateOrderDto } from "../routes/order/order.dto";
 
 export const orderService = {
-  createOrder: async (data: CreateOrderDto) => {
-    const { userId, items } = data;
+  createOrder: async (data: CreateOrderDto, userId: number) => {
+    const { items } = data;
 
     const orderedItemsPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -22,10 +22,11 @@ export const orderService = {
     return order;
   },
 
-  getOrders: async (queryParams: QueryParams) => {
+  getOrders: async (queryParams: QueryParams, userId: number) => {
     const { pageNumber = 0, pageSize = 10, sortBy = "createdAt", direction = "desc", q } = queryParams;
 
     const whereConditions = {
+      userId,
       ...createSearchCondition("status", q ?? ""),
     };
 
@@ -42,14 +43,16 @@ export const orderService = {
     return createPage({ items: orders, total, pageNumber, pageSize });
   },
 
-  getOrderById: async (id: number) => {
+  getOrderById: async (id: number, userId: number) => {
     const order = await db.order.findUnique({
       where: { id },
       include: {
         items: true,
       },
     });
+
     if (!order) throw new NotFoundError();
+    if (order.userId !== userId) throw new ForbiddenError();
 
     return order;
   },
