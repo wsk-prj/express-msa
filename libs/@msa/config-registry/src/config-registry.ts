@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import path from "path";
 import {
   AuthServiceConfigSchema,
   UserServiceConfigSchema,
@@ -13,8 +14,9 @@ import {
   type GatewayConfig,
 } from "./schema";
 
-// .env 파일 로드
-dotenv.config();
+// 루트 디렉토리의 .env 파일 로드
+const rootEnvPath = path.resolve(process.cwd(), "../../.env");
+dotenv.config({ path: rootEnvPath });
 
 class ConfigRegistry {
   private static instance: ConfigRegistry;

@@ -1,3 +1,22 @@
-import { PrismaClient } from "../generated/prisma";
+import { PrismaClient } from "@/generated/prisma";
 
-export const db = new PrismaClient();
+// Singleton instance - Hot Reload 대비
+declare global {
+  // eslint-disable-next-line no-var
+  var prisma: PrismaClient | undefined; // var로 선언해야 globalThis에 제대로 붙음
+}
+
+export const db =
+  global.prisma ??
+  new PrismaClient({
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL!,
+      },
+    },
+    log: ["query", "error", "warn"],
+  });
+
+if (process.env.NODE_ENV !== "production") {
+  global.prisma = db;
+}

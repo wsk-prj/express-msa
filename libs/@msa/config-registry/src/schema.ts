@@ -17,16 +17,10 @@ const ServicePortsSchema = z.object({
 // JWT 설정
 const JWTConfigSchema = z.object({
   JWT_SECRET: z.string().min(1, "JWT_SECRET is required"),
-  JWT_EXPIRES_IN: z.coerce.number().default(900),  // ms
+  JWT_EXPIRES_IN: z.coerce.number().default(900), // ms
   JWT_REFRESH_SECRET: z.string().min(1, "JWT_REFRESH_SECRET is required"),
   JWT_REFRESH_EXPIRES_IN: z.coerce.number().default(7200), // ms
   JWT_REFRESH_REGENERATE_THRESHOLD: z.coerce.number().default(1800), // ms
-});
-
-// 데이터베이스 설정
-const DatabaseConfigSchema = z.object({
-  DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
-  DIRECT_URL: z.string().optional(),
 });
 
 // Redis 설정
@@ -41,17 +35,24 @@ const RedisConfigSchema = z.object({
 export const GatewayConfigSchema = BaseConfigSchema.merge(ServicePortsSchema);
 
 export const BaseServiceConfigSchema = BaseConfigSchema.merge(ServicePortsSchema)
-    .merge(JWTConfigSchema)
-    .merge(DatabaseConfigSchema)
-    .merge(RedisConfigSchema);
+  .merge(JWTConfigSchema)
+  .merge(RedisConfigSchema);
 
-export const AuthServiceConfigSchema = BaseServiceConfigSchema.extend({});
+export const AuthServiceConfigSchema = BaseServiceConfigSchema.extend({
+  SERVICE_NAME: z.string().default("auth-service"),
+});
 
-export const UserServiceConfigSchema = BaseServiceConfigSchema.extend({});
+export const UserServiceConfigSchema = BaseServiceConfigSchema.extend({
+  SERVICE_NAME: z.string().default("user-service"),
+});
 
-export const StoreServiceConfigSchema = BaseServiceConfigSchema.merge(RedisConfigSchema);
+export const StoreServiceConfigSchema = BaseServiceConfigSchema.extend({
+  SERVICE_NAME: z.string().default("store-service"),
+});
 
-export const OrderServiceConfigSchema = BaseServiceConfigSchema.extend({});
+export const OrderServiceConfigSchema = BaseServiceConfigSchema.extend({
+  SERVICE_NAME: z.string().default("order-service"),
+});
 
 // 타입 정의
 export type GatewayConfig = z.infer<typeof GatewayConfigSchema>;
