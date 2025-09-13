@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@msa/authentication": "file:../libs/@msa/authentication",
+    "@msa/config-registry": "file:../libs/@msa/config-registry",
     "@msa/http-error": "file:../libs/@msa/http-error",
     "@msa/response-data": "file:../libs/@msa/response-data",
     "@msa/shared": "file:../libs/@msa/shared"

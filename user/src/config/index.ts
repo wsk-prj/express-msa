@@ -1,15 +1,8 @@
-import dotenv from "dotenv";
+import { getUserConfig } from "@msa/config-registry";
 
-dotenv.config();
+const baseConfig = getUserConfig();
 
 export const config = {
-  PORT: 4002,
+  ...baseConfig,
   ROUTER_PREFIX: "/api",
-
-  // JWT Configuration
-  JWT_SECRET: process.env.JWT_SECRET as string,
-  JWT_EXPIRES_IN: 900,
-  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET as string,
-  JWT_REFRESH_EXPIRES_IN: 7200,
-  JWT_REFRESH_REGENERATE_THRESHOLD: 1800,
 };
