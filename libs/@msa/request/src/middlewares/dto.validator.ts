@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ZodSchema, ZodError } from "zod";
 
-import { BadRequestError } from "@msa/http-error";
+import { BadRequestError, ValidationError, ValidationFieldError } from "@msa/http-error";
 
 /**
  * Zod 스키마를 사용한 요청 검증 미들웨어
@@ -15,10 +15,13 @@ export function validateRequest(schema: ZodSchema) {
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const firstError = error.errors[0];
-        const errorMessage = firstError?.message || "Request validation failed";
+        const fieldErrors: ValidationFieldError[] = error.errors.map((err) => ({
+          field: err.path.join('.'),
+          message: err.message,
+          value: undefined
+        }));
 
-        throw new BadRequestError(errorMessage);
+        throw new ValidationError(fieldErrors);
       }
 
       throw new BadRequestError("Invalid request data");
@@ -38,10 +41,13 @@ export function validateQuery(schema: ZodSchema) {
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const firstError = error.errors[0];
-        const errorMessage = firstError?.message || "Query validation failed";
+        const fieldErrors: ValidationFieldError[] = error.errors.map((err) => ({
+          field: err.path.join('.'),
+          message: err.message,
+          value: undefined
+        }));
 
-        throw new BadRequestError(errorMessage);
+        throw new ValidationError(fieldErrors);
       }
 
       throw new BadRequestError("Invalid query parameters");
