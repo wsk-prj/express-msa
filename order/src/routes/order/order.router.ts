@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { validateRequest, validateQuery } from "@msa/shared";
+import { validateRequest, validateQuery } from "@msa/request";
 import { QueryParamsSchema } from "@msa/request";
 import { authMiddleware } from "@msa/authentication";
 

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { validateRequest } from "@msa/shared";
+import { validateRequest } from "@msa/request";
 import { authMiddleware } from "@msa/authentication";
 
 import { CreateProfileSchema, ProfileResponse } from "@/routes/user/user.dto";
