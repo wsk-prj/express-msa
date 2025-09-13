@@ -4,12 +4,11 @@ import { AuthUser } from "../types/auth-user";
 
 export interface JwtConfig {
   JWT_SECRET: string;
-  JWT_EXPIRES_IN: string;
-  JWT_REGENERATE_THRESHOLD: string;
+  JWT_EXPIRES_IN: number; // 초 단위
 
   JWT_REFRESH_SECRET: string;
-  JWT_REFRESH_EXPIRES_IN: string;
-  JWT_REFRESH_REGENERATE_THRESHOLD: string;
+  JWT_REFRESH_EXPIRES_IN: number; // 초 단위
+  JWT_REFRESH_REGENERATE_THRESHOLD: number; // 초 단위
 }
 
 let jwtConfig: JwtConfig | null = null;
@@ -108,7 +107,8 @@ export function extractAuthUserFromToken(token: string): AuthUser {
  */
 export function updateRefreshToken(currentRefreshToken: string, payload: RefreshPayload): string {
   // 리프레시 토큰이 곧 만료되면 새로운 토큰 생성
-  if (isTokenExpiringSoon(currentRefreshToken, parseInt(jwtConfig!.JWT_REFRESH_REGENERATE_THRESHOLD))) {
+  // JWT_REFRESH_REGENERATE_THRESHOLD는 초 단위이므로 밀리초로 변환
+  if (isTokenExpiringSoon(currentRefreshToken, jwtConfig!.JWT_REFRESH_REGENERATE_THRESHOLD * 1000)) {
     return generateRefreshToken(payload);
   }
 
@@ -128,12 +128,12 @@ function isTokenExpiringSoon(token: string, thresholdMs: number): boolean {
 }
 
 /**
- * 토큰의 만료 시간을 확인 (밀리초 단위)
+ * 토큰의 만료 시간을 확인 (밀리초 단위로 반환)
  */
 function getTokenExpirationTime(token: string): number {
   try {
     const decoded = jwt.decode(token) as any;
-    return decoded?.exp ? decoded.exp * 1000 : 0;
+    return decoded?.exp ? decoded.exp * 1000 : 0; // JWT exp는 초 단위이므로 밀리초로 변환
   } catch (error) {
     return 0;
   }
