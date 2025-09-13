@@ -4,10 +4,10 @@ import { AuthUser } from "../types/auth-user";
 
 export interface JwtConfig {
   JWT_SECRET: string;
-  JWT_ACCESS_EXPIRES_IN: string;
-  JWT_ACCESS_REGENERATE_THRESHOLD: string;
+  JWT_EXPIRES_IN: string;
+  JWT_REGENERATE_THRESHOLD: string;
 
-  JWT_SECRET_REFRESH: string;
+  JWT_REFRESH_SECRET: string;
   JWT_REFRESH_EXPIRES_IN: string;
   JWT_REFRESH_REGENERATE_THRESHOLD: string;
 }
@@ -29,7 +29,7 @@ export function generateAccessToken(payload: AccessPayload): string {
 
   try {
     const token = jwt.sign(payload, jwtConfig!.JWT_SECRET, {
-      expiresIn: jwtConfig!.JWT_ACCESS_EXPIRES_IN,
+      expiresIn: jwtConfig!.JWT_EXPIRES_IN,
     } as SignOptions);
 
     if (process.env.NODE_ENV === "development") {
@@ -51,7 +51,7 @@ export function generateRefreshToken(payload: RefreshPayload): string {
   validateConfig();
 
   try {
-    return jwt.sign(payload, jwtConfig!.JWT_SECRET_REFRESH, {
+    return jwt.sign(payload, jwtConfig!.JWT_REFRESH_SECRET, {
       expiresIn: jwtConfig!.JWT_REFRESH_EXPIRES_IN,
     } as SignOptions);
   } catch (error) {
@@ -80,7 +80,7 @@ export function verifyRefreshToken(token: string): RefreshPayload {
   validateConfig();
 
   try {
-    return jwt.verify(token, jwtConfig!.JWT_SECRET_REFRESH) as unknown as RefreshPayload;
+    return jwt.verify(token, jwtConfig!.JWT_REFRESH_SECRET) as unknown as RefreshPayload;
   } catch (error) {
     throw new Error("Invalid refresh token");
   }
