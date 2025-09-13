@@ -9,6 +9,7 @@ import { errorHandler, responseDataHandler } from "@msa/response-data";
 
 import { config } from "@/config";
 import { router } from "@/routes/index";
+import { setup as setupJwtUtil } from "@msa/authentication";
 
 const app = express();
 
@@ -39,4 +40,12 @@ app.get("/health", (_req, res) => {
 // Startup action
 app.listen(config.PORT, () => {
   console.log(`   Auth Service is running on port ${config.PORT}`);
+
+  setupJwtUtil({
+    JWT_SECRET: config.JWT_SECRET,
+    JWT_EXPIRES_IN: config.JWT_EXPIRES_IN,
+    JWT_REFRESH_SECRET: config.JWT_REFRESH_SECRET,
+    JWT_REFRESH_EXPIRES_IN: config.JWT_REFRESH_EXPIRES_IN,
+    JWT_REFRESH_REGENERATE_THRESHOLD: config.JWT_REFRESH_REGENERATE_THRESHOLD,
+  });
 });

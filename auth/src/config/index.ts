@@ -8,9 +8,10 @@ export const config = {
 
   // JWT Configuration
   JWT_SECRET: process.env.JWT_SECRET as string,
-  JWT_SECRET_REFRESH: process.env.JWT_SECRET_REFRESH as string,
-  JWT_ACCESS_EXPIRES_IN: "10m",
-  JWT_REFRESH_EXPIRES_IN: "1h",
+  JWT_EXPIRES_IN: 900,
+  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET as string,
+  JWT_REFRESH_EXPIRES_IN: 7200,
+  JWT_REFRESH_REGENERATE_THRESHOLD: 1800,
 
   // Cookie Configuration
   REFRESH_TOKEN_COOKIE_NAME: "refreshToken",

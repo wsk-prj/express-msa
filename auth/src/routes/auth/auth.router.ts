@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { validateRequest } from "@msa/shared";
+import { validateRequest } from "@msa/request";
 
 import { publishSignupEvent } from "@/services/auth.event-pub";
 import { config } from "@/config";
@@ -34,7 +34,7 @@ router.post("/login", validateRequest(LoginSchema), async (req, res, _next) => {
 
 // 로그아웃
 router.post("/logout", requiredAuth, async (req, res, _next) => {
-  await authService.logout(req.user!.userId);
+  await authService.logout(req.user!.id);
 
   res.clearCookie(config.REFRESH_TOKEN_COOKIE_NAME, config.COOKIE_OPTIONS);
 

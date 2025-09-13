@@ -1,10 +1,9 @@
 import { ConflictError, UnauthorizedError } from "@msa/http-error";
 import bcrypt from "bcrypt";
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken, updateRefreshToken } from "@msa/authentication";
 
 import { db } from "@/libs/db";
 import { SignupDto, LoginDto, CheckEmailDto, CheckNicknameDto } from "@/routes/auth/auth.dto";
-import { tx } from "@/persist/auth.transaction";
-import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "@/libs/jwt";
 
 export const authService = {
   signup: async (data: SignupDto) => {
@@ -17,10 +16,24 @@ export const authService = {
     if (existAuth) throw new ConflictError();
 
     const hashedPassword = await bcrypt.hash(password, 12);
-    const { user: newUser, auth: newAuth } = await tx.signup({
-      nickname,
-      email,
-      password: hashedPassword,
+
+    const { user: newUser, auth: newAuth } = await db.$transaction(async (tx) => {
+      const user = await tx.user.create({
+        data: {
+          nickname,
+          tokenVersion: 0, // 초기 토큰 버전
+        },
+      });
+
+      const auth = await tx.auth.create({
+        data: {
+          email,
+          password: hashedPassword,
+          userId: user.id,
+        },
+      });
+
+      return { user, auth };
     });
 
     return {
@@ -42,12 +55,13 @@ export const authService = {
     if (!isPasswordValid) throw new UnauthorizedError();
 
     const accessToken = generateAccessToken({
-      userId: dbAuth.user.id,
+      sub: dbAuth.user.id,
       email: dbAuth.email,
       nickname: dbAuth.user.nickname,
     });
+
     const refreshToken = generateRefreshToken({
-      userId: dbAuth.user.id,
+      sub: dbAuth.user.id,
       tokenVersion: dbAuth.user.tokenVersion,
     });
 
@@ -84,13 +98,13 @@ export const authService = {
     if (!refreshToken) throw new UnauthorizedError();
     const payload = verifyRefreshToken(refreshToken);
 
-    const dbAuth = await db.auth.findUnique({ where: { id: payload.userId }, include: { user: true } });
+    const dbAuth = await db.auth.findUnique({ where: { id: payload.sub }, include: { user: true } });
     if (!dbAuth || !dbAuth.user) throw new UnauthorizedError();
     if (dbAuth.user.tokenVersion !== payload.tokenVersion) throw new UnauthorizedError();
 
     return {
-      accessToken: generateAccessToken({ userId: dbAuth.user.id, nickname: dbAuth.user.nickname, email: dbAuth.email }),
-      refreshToken: generateRefreshToken({ userId: dbAuth.user.id, tokenVersion: dbAuth.user.tokenVersion }),
+      accessToken: generateAccessToken({ sub: dbAuth.user.id, nickname: dbAuth.user.nickname, email: dbAuth.email }),
+      refreshToken: updateRefreshToken(refreshToken, { sub: dbAuth.user.id, tokenVersion: dbAuth.user.tokenVersion }),
     };
   },
 };
