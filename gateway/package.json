@@ -10,6 +10,7 @@
     "lint:fix": "eslint src --ext .ts --fix"
   },
   "dependencies": {
+    "@msa/config-registry": "file:../libs/@msa/config-registry",
     "http-proxy-middleware": "^2.0.6",
     "express-rate-limit": "^7.1.5"
   },
