@@ -1,0 +1,20 @@
+{
+  "name": "@msa/authentication",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@msa/http-error": "file:../@msa/http-error",
+    "jsonwebtoken": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4",
+    "@types/jsonwebtoken": "^9.0.0",
+    "@types/node": "^20",
+    "typescript": "~5.8"
+  }
+}
