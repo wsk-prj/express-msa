@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validateRequest } from "@msa/request";
-import { authMiddleware } from "@msa/authentication";
+import { requireAuth } from "@msa/authentication";
 
 import { orderStatusService } from "../../services/order-status.service";
 import { orderCancelSchema, orderRejectSchema, OrderResponse } from "./order.dto";
@@ -31,7 +31,7 @@ router.post("/:orderId/complete", async (req, res) => {
   res.success<OrderResponse>(order);
 });
 
-router.post("/:orderId/cancel", authMiddleware(), validateRequest(orderCancelSchema), async (req, res) => {
+router.post("/:orderId/cancel", requireAuth(), validateRequest(orderCancelSchema), async (req, res) => {
   const orderId = Number(req.params.orderId);
   const userId = req.user!.id;
   const { reason } = req.body;

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validateRequest, validateQuery } from "@msa/request";
 import { PagedParamsSchema } from "@msa/request";
-import { authMiddleware } from "@msa/authentication";
+import { requireAuth } from "@msa/authentication";
 import { Page } from "@msa/response-data";
 
 import { userAddressService } from "@/services/user-address.service";
@@ -13,7 +13,7 @@ const router = Router();
  * 배송지 생성
  * POST /api/users/:userId/addresses
  */
-router.post("/:userId/addresses", authMiddleware(), validateRequest(CreateAddressSchema), async (req, res, _next) => {
+router.post("/:userId/addresses", requireAuth(), validateRequest(CreateAddressSchema), async (req, res, _next) => {
   const userId = req.user!.id;
   const address = await userAddressService.createAddress(req.body, userId);
   res.created<AddressResponse>(address);
@@ -23,7 +23,7 @@ router.post("/:userId/addresses", authMiddleware(), validateRequest(CreateAddres
  * 배송지 목록 조회
  * GET /api/users/:userId/addresses
  */
-router.get("/:userId/addresses", authMiddleware(), validateQuery(PagedParamsSchema), async (req, res, _next) => {
+router.get("/:userId/addresses", requireAuth(), validateQuery(PagedParamsSchema), async (req, res, _next) => {
   const userId = req.user!.id;
   const { pageNumber, pageSize } = req.query;
   const result = await userAddressService.getAddresses(userId, Number(pageNumber), Number(pageSize));
@@ -34,7 +34,7 @@ router.get("/:userId/addresses", authMiddleware(), validateQuery(PagedParamsSche
  * 기본 배송지 조회
  * GET /api/users/:userId/addresses/default
  */
-router.get("/:userId/addresses/default", authMiddleware(), async (req, res, _next) => {
+router.get("/:userId/addresses/default", requireAuth(), async (req, res, _next) => {
   const userId = req.user!.id;
   const address = await userAddressService.getDefaultAddress(userId);
   res.success<AddressResponse>(address);
@@ -44,7 +44,7 @@ router.get("/:userId/addresses/default", authMiddleware(), async (req, res, _nex
  * 특정 배송지 조회
  * GET /api/users/:userId/addresses/:addressId
  */
-router.get("/:userId/addresses/:addressId", authMiddleware(), async (req, res, _next) => {
+router.get("/:userId/addresses/:addressId", requireAuth(), async (req, res, _next) => {
   const addressId = Number(req.params.addressId);
   const userId = req.user!.id;
   const address = await userAddressService.getAddressById(addressId, userId);
@@ -55,7 +55,7 @@ router.get("/:userId/addresses/:addressId", authMiddleware(), async (req, res, _
  * 배송지 수정
  * PUT /api/users/:userId/addresses/:addressId
  */
-router.put("/:userId/addresses/:addressId", authMiddleware(), validateRequest(UpdateAddressSchema), async (req, res, _next) => {
+router.put("/:userId/addresses/:addressId", requireAuth(), validateRequest(UpdateAddressSchema), async (req, res, _next) => {
   const addressId = Number(req.params.addressId);
   const userId = req.user!.id;
   const address = await userAddressService.updateAddress(req.body, addressId, userId);
@@ -66,7 +66,7 @@ router.put("/:userId/addresses/:addressId", authMiddleware(), validateRequest(Up
  * 배송지 삭제
  * DELETE /api/users/:userId/addresses/:addressId
  */
-router.delete("/:userId/addresses/:addressId", authMiddleware(), async (req, res, _next) => {
+router.delete("/:userId/addresses/:addressId", requireAuth(), async (req, res, _next) => {
   const addressId = Number(req.params.addressId);
   const userId = req.user!.id;
   await userAddressService.deleteAddress(addressId, userId);
