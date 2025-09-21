@@ -14,6 +14,7 @@ export interface JwtPayload {
 export interface AccessPayload extends JwtPayload {
   email: string;
   nickname: string;
+  role: string;
 }
 
 export interface RefreshPayload extends JwtPayload {

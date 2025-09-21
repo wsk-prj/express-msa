@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validateRequest, validateQuery } from "@msa/request";
 import { QueryParamsSchema } from "@msa/request";
-import { authMiddleware } from "@msa/authentication";
+import { requireAuth } from "@msa/authentication";
 
 import { storeService } from "@/services/store.service";
 
@@ -10,7 +10,7 @@ import { createStoreSchema, updateStoreSchema } from "./store.dto";
 const router = Router();
 
 // 가게 CRUD
-router.post("/", authMiddleware(), validateRequest(createStoreSchema), async (req, res) => {
+router.post("/", requireAuth(), validateRequest(createStoreSchema), async (req, res) => {
   const userId = req.user!.id;
   const store = await storeService.createStore(req.body, userId);
   res.created(store);
@@ -28,14 +28,14 @@ router.get("/:storeId", async (req, res) => {
   res.success(store);
 });
 
-router.put("/:storeId", authMiddleware(), validateRequest(updateStoreSchema), async (req, res) => {
+router.put("/:storeId", requireAuth(), validateRequest(updateStoreSchema), async (req, res) => {
   const userId = req.user!.id;
   const storeId = Number(req.params.storeId);
   const store = await storeService.updateStore(storeId, req.body, userId);
   res.success(store);
 });
 
-router.delete("/:storeId", authMiddleware(), async (req, res) => {
+router.delete("/:storeId", requireAuth(), async (req, res) => {
   const userId = req.user!.id;
   const storeId = Number(req.params.storeId);
   await storeService.deleteStore(storeId, userId);
