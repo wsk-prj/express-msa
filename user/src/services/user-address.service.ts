@@ -1,4 +1,5 @@
 import { NotFoundError, ForbiddenError, ConflictError } from "@msa/http-error";
+import { createPage, Page } from "@msa/response-data";
 
 import { db } from "@/libs/db";
 import { CreateAddressDto, UpdateAddressDto, AddressResponse, AddressListResponse } from "@/routes/user-address/address.dto";
@@ -43,19 +44,28 @@ export const userAddressService = {
   /**
    * 사용자의 모든 주소 조회
    */
-  getAddresses: async (userId: number): Promise<AddressListResponse> => {
-    const addresses = await db.address.findMany({
-      where: { userId },
-      orderBy: [
-        { isDefault: 'desc' }, // 기본 배송지가 먼저
-        { createdAt: 'desc' },
-      ],
-    });
+  getAddresses: async (userId: number, pageNumber: number = 0, pageSize: number = 10): Promise<AddressListResponse> => {
+    const [addresses, total] = await Promise.all([
+      db.address.findMany({
+        where: { userId },
+        orderBy: [
+          { isDefault: "desc" }, // 최상단에 기본 배송지
+          { createdAt: "desc" },
+        ],
+        skip: pageNumber * pageSize,
+        take: pageSize,
+      }),
+      db.address.count({
+        where: { userId },
+      }),
+    ]);
 
-    return {
-      addresses,
-      total: addresses.length,
-    };
+    return createPage({
+      items: addresses,
+      total,
+      pageNumber,
+      pageSize,
+    });
   },
 
   /**
@@ -135,7 +145,6 @@ export const userAddressService = {
       where: { id: addressId },
     });
   },
-
 
   /**
    * 기본 배송지 조회

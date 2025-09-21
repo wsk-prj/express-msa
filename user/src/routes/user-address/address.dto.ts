@@ -20,14 +20,8 @@ export const UpdateAddressSchema = z.object({
   isDefault: z.boolean().optional(),
 });
 
-// 기본 배송지 설정 DTO
-export const SetDefaultAddressSchema = z.object({
-  addressId: z.number().int().positive("올바른 주소 ID를 입력해주세요"),
-});
-
 export type CreateAddressDto = z.infer<typeof CreateAddressSchema>;
 export type UpdateAddressDto = z.infer<typeof UpdateAddressSchema>;
-export type SetDefaultAddressDto = z.infer<typeof SetDefaultAddressSchema>;
 
 // 응답 타입들
 export interface AddressResponse {
@@ -40,9 +34,4 @@ export interface AddressResponse {
   isDefault: boolean;
   createdAt: Date;
   updatedAt: Date;
-}
-
-export interface AddressListResponse {
-  addresses: AddressResponse[];
-  total: number;
 }
