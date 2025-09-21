@@ -16,11 +16,26 @@ datasource db {
 }
 
 model Profile {
-  id      Int     @id @default(autoincrement())
-  userId  Int     @unique
-  phone   String?
-  address String?
+  id     Int     @id @default(autoincrement())
+  userId Int     @unique
+  phone  String?
 
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
+}
+
+model Address {
+  id            Int     @id @default(autoincrement())
+  userId        Int
+  name          String
+  phone         String
+  address       String
+  detailAddress String?
+  zipCode       String
+  isDefault     Boolean @default(false)
+
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+
+  @@index([userId])
 }

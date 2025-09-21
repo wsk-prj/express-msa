@@ -5,10 +5,10 @@ import { CreateProfileDto } from "@/routes/user/user.dto";
 
 export const userService = {
   createProfile: async (data: CreateProfileDto, userId: number) => {
-    const { phone, address } = data;
+    const { phone } = data;
 
     const dbProfile = await db.profile.create({
-      data: { phone, address, userId },
+      data: { phone, userId },
     });
 
     return dbProfile;
