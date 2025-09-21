@@ -58,6 +58,7 @@ export const authService = {
       sub: dbAuth.user.id,
       email: dbAuth.email,
       nickname: dbAuth.user.nickname,
+      role: dbAuth.user.role,
     });
 
     const refreshToken = generateRefreshToken({

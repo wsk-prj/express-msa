@@ -96,6 +96,7 @@ export function extractAuthUserFromToken(token: string): AuthUser {
       id: payload.sub,
       email: payload.email,
       nickname: payload.nickname,
+      role: payload.role as any,
     };
   } catch (error) {
     throw new Error("Invalid token");
